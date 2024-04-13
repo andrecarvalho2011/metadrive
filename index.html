@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaDriver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            margin-top: 10px;
+            color: #888;
+        }
+
+        #mensagem {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MetaDriver 1.0 Beta</h1>
+        <label for="meta">Meta do Dia:</label>
+        <input type="number" id="meta" placeholder="Insira sua meta do dia">
+        <label for="valor">Valor da Corrida:</label>
+        <input type="number" id="valor" placeholder="Insira o valor da corrida">
+        <button onclick="adicionarValor()">Adicionar Valor</button>
+        <button onclick="excluirUltimoValor()">Excluir Último Valor</button>
+        <p id="metaRestante"></p>
+        <p id="mensagem"></p>
+    </div>
+
+    <footer>Desenvolvido por André Carvalho</footer>
+
+    <script>
+        let metaDoDia = 0;
+        let ganhosTotais = 0;
+        let ganhosCorrida = [];
+
+        function adicionarValor() {
+            const metaInput = document.getElementById("meta");
+            if (metaInput.value === "") {
+                alert("Por favor, insira sua meta do dia primeiro.");
+                return;
+            }
+            const valor = parseFloat(document.getElementById("valor").value);
+            ganhosTotais += valor;
+            ganhosCorrida.push(valor);
+            atualizarMetaRestante();
+            exibirMensagem();
+        }
+
+        function excluirUltimoValor() {
+            if (ganhosCorrida.length === 0) {
+                alert("Não há valores para excluir.");
+                return;
+            }
+            const ultimoValor = ganhosCorrida.pop();
+            ganhosTotais -= ultimoValor;
+            atualizarMetaRestante();
+            exibirMensagem();
+        }
+
+        function atualizarMetaRestante() {
+            metaDoDia = parseFloat(document.getElementById("meta").value);
+            const metaRestante = metaDoDia - ganhosTotais;
+            document.getElementById("metaRestante").innerText = `Falta R$ ${metaRestante.toFixed(2)} para atingir a meta do dia.`;
+        }
+
+        function exibirMensagem() {
+            const porcentagem = (ganhosTotais / metaDoDia) * 100;
+            let mensagem = "";
+
+            if (porcentagem > 100) {
+                const valorExcedente = ganhosTotais - metaDoDia;
+                mensagem = `Você se superou! Ultrapassou a meta em R$ ${valorExcedente.toFixed(2)}!`;
+            } else if (porcentagem >= 80) {
+                mensagem = "Vamos lá! Está muito perto de descansar.";
+            } else if (porcentagem >= 60) {
+                mensagem = "Falta pouco para ir para casa!";
+            } else if (porcentagem >= 40) {
+                mensagem = "Você está indo muito bem!";
+            } else if (porcentagem >= 20) {
+                mensagem = "Isso mesmo! Você está no caminho certo!";
+            }
+
+            document.getElementById("mensagem").innerText = mensagem;
+        }
+    </script>
+</body>
+</html>
